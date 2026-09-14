@@ -5,10 +5,12 @@ from elftools.elf.elffile import ELFFile
 from npk import NovaPackage,NpkPartID,NpkFileContainer
 
 def replace_chunks(old_chunks,new_chunks,data,name):
+    if not old_chunks:
+        return data
     pattern_parts = [re.escape(chunk) + b'(.{0,6})' for chunk in old_chunks[:-1]]
-    pattern_parts.append(re.escape(old_chunks[-1])) 
+    pattern_parts.append(re.escape(old_chunks[-1]))
     pattern_bytes = b''.join(pattern_parts)
-    pattern = re.compile(pattern_bytes, flags=re.DOTALL) 
+    pattern = re.compile(pattern_bytes, flags=re.DOTALL)
     def replace_match(match):
         replaced = b''.join([new_chunks[i] + match.group(i+1) for i in range(len(new_chunks) - 1)])
         replaced += new_chunks[-1]
