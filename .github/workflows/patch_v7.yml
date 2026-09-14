@@ -1,6 +1,7 @@
 name: Patch RouterOS v7
 on:
-  workflow_call:  
+  workflow_dispatch:
+  workflow_call:
     inputs:
       version:
         required: true
