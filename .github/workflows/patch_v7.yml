@@ -236,24 +236,11 @@ jobs:
         path: ${{ env.BUILD_DIR }}/mikrotik-${{ env.VERSION }}${{ env.ARCH_EXT }}.iso
         key: mikrotik-${{ env.VERSION }}${{ env.ARCH_EXT }}.iso
 
-    - name: Get mikrotik-${{ env.VERSION }}${{ env.ARCH_EXT }}.iso
-      if: steps.cache-mikrotik-iso.outputs.cache-hit != 'true' 
+    - name: Download Main RouterOS NPK
       run: |
-        wget -nv -O $BUILD_DIR/mikrotik-$VERSION$ARCH_EXT.iso \
-            https://download.mikrotik.com/routeros/$VERSION/mikrotik-$VERSION$ARCH_EXT.iso
-
-    - name: Unpack ISO
-      run: |
-        mkdir -p $BUILD_DIR/all_packages
-        mkdir -p $BUILD_DIR/iso
-        mkdir -p $BUILD_DIR/new_iso
-        sudo mount -o loop,ro $BUILD_DIR/mikrotik-$VERSION$ARCH_EXT.iso $BUILD_DIR/iso
-        cp -v $BUILD_DIR/iso/*.npk $BUILD_DIR/all_packages/
-        mv $BUILD_DIR/all_packages/routeros-$VERSION$ARCH_EXT.npk $BUILD_DIR/
-        cp -v $BUILD_DIR/iso/efiboot.img $BUILD_DIR/new_iso/
-        cp -v $BUILD_DIR/iso/defpacks $BUILD_DIR/new_iso/ 
-        sudo umount $BUILD_DIR/iso
-        rm -rf $BUILD_DIR/iso
+            mkdir -p $BUILD_DIR/all_packages
+            echo "Downloading main package for $ARCH..."
+            wget -nv -O $BUILD_DIR/routeros-$VERSION$ARCH_EXT.npk "https://download.mikrotik.com/routeros/$VERSION/routeros-$VERSION$ARCH_EXT.npk"
 
     - name: Check and download missing packages
       run: |
