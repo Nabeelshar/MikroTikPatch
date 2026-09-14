@@ -255,10 +255,14 @@ jobs:
 
     - name: Get loader patch files
       run: |
-        wget -nv -O loader.7z https://${{ env.CUSTOM_UPGRADE_URL }}/routeros/loader.7z
-        sudo apt-get install -y p7zip-full > /dev/null
-        7z x -p"${{ secrets.LOADER_7Z_PASSWORD }}" loader.7z >> /dev/null
-        rm loader.7z
+        if [ -n "${{ env.CUSTOM_UPGRADE_URL }}" ]; then
+            wget -nv -O loader.7z https://${{ env.CUSTOM_UPGRADE_URL }}/routeros/loader.7z
+            sudo apt-get install -y p7zip-full > /dev/null
+            7z x -p"${{ secrets.LOADER_7Z_PASSWORD }}" loader.7z >> /dev/null || true
+            rm -f loader.7z
+        else
+            echo "CUSTOM_UPGRADE_URL not set, skipping loader patch download."
+        fi
 
     - name: Patch NPK files
       run: |
