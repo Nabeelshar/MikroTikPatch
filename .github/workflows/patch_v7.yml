@@ -117,8 +117,24 @@ jobs:
       run: |
         echo "Creating Option Package Squashfs for arch: $ARCH"
         mkdir -p $BUILD_DIR/option-root/bin/
-        install -m 755 ./busybox/busybox_$ARCH $BUILD_DIR/option-root/bin/busybox
-        install -m 755 ./keygen/keygen_$ARCH $BUILD_DIR/option-root/bin/keygen
+
+        if [ -f "./busybox/busybox_$ARCH" ]; then
+            install -m 755 ./busybox/busybox_$ARCH $BUILD_DIR/option-root/bin/busybox
+        elif [ -f "./busybox/busybox_armhf" ]; then
+            install -m 755 ./busybox/busybox_armhf $BUILD_DIR/option-root/bin/busybox
+        else
+            install -m 755 ./busybox/busybox_x86 $BUILD_DIR/option-root/bin/busybox
+        fi
+        
+        if [ -f "./keygen/keygen_$ARCH" ]; then
+            install -m 755 ./keygen/keygen_$ARCH $BUILD_DIR/option-root/bin/keygen
+        elif [ -f "./keygen/keygen_armhf" ]; then
+            install -m 755 ./keygen/keygen_armhf $BUILD_DIR/option-root/bin/keygen
+        else
+            install -m 755 ./keygen/keygen_x86 $BUILD_DIR/option-root/bin/keygen
+        fi
+
+        
         chmod +x ./busybox/busybox_x86
         COMMANDS=$(./busybox/busybox_x86 --list)
         for cmd in $COMMANDS; do
