@@ -1,6 +1,28 @@
 name: Patch RouterOS v7
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'RouterOS Version'
+        required: true
+        default: '7.24.2'
+      channels:
+        description: 'Channels (JSON array string)'
+        required: true
+        default: '["stable"]'
+      archs:
+        description: 'Architecture List (JSON array string)'
+        required: true
+        default: '["arm"]'
+      release:
+        description: 'Create GitHub Release?'
+        required: true
+        type: boolean
+        default: false
+      buildtime:
+        description: 'Build Time (optional)'
+        required: false
+        default: ''
   workflow_call:
     inputs:
       version:
